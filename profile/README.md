@@ -23,7 +23,7 @@
 
 ## Overview
 
-IrisHealth is an engineering research prototype that investigates whether images of predefined iris sectors can be classified according to the labels in a lung-sector iris dataset and processed interactively on a mobile device. The work joins a controlled deep learning benchmark with a Flutter application, an on-device image-processing pipeline, and supporting services for user and staff workflows. It evaluates agreement with dataset labels; it does **not** establish iris sectors as clinically valid indicators of pulmonary disease.
+IrisHealth is an engineering research prototype that investigates whether images of predefined iris sectors can be classified according to the labels in a lung-sector iris dataset and processed on a mobile device. The work joins a controlled deep learning benchmark with a Flutter application, an on-device image-processing pipeline, and supporting services for user and staff workflows. It evaluates agreement with dataset labels; it does **not** establish iris sectors as clinically valid indicators of pulmonary disease.
 
 In the paper's mobile inference path, an iris image is captured and processed locally: the app locates the pupil and iris, extracts a dynamic annular sector, unwraps it into a rectangular region of interest (ROI), and pads and normalizes it for a `1 × 224 × 224` model input. A MobileNetV3-Small model runs through ONNX Runtime on the device. The app maps its binary score to **Positive**, **Negative**, or an **Unknown** band for ambiguous results, with an explicit research-use disclaimer. The paper describes optional synchronization of screening summaries while raw frames and ROI tensors remain on the device in this path.
 
@@ -31,7 +31,7 @@ The research benchmark compares seven model architectures using subject-disjoint
 
 ## System architecture
 
-The repositories separate experimental model development from the user and staff applications. Both applications use the backend for their account and record workflows; the paper's measured classification path runs locally in the mobile client.
+The repositories separate experimental model development from the user and staff applications. Both applications use the backend for their account and record workflows; the paper's classification path runs locally in the mobile client.
 
 ```mermaid
 flowchart LR
@@ -61,9 +61,8 @@ The pupil and iris boundaries define an annular sector. The sector is unwrapped 
 | Binary benchmark cohort | **10,892 images · 6,606 subjects** |
 | ConvNeXt-Tiny · offline reference | **96.21% accuracy · 94.18% F1** |
 | MobileNetV3-Small · mobile model | **94.14% accuracy · 91.10% F1** |
-| End-to-end mobile latency | **389.7 ± 16.5 ms** on one Galaxy Tab A9, 30 runs |
 
-<p align="center"><em>Dataset and device-specific engineering results; no clinical validation is claimed.</em></p>
+<p align="center"><em>Dataset-specific engineering results; no clinical validation is claimed.</em></p>
 
 ### Seven-model comparison
 
@@ -80,14 +79,6 @@ The paper reports the following held-out test results under a shared training pr
 | **MobileNetV3-Small** · mobile model | **0.941 ± 0.003** | **0.911 ± 0.005** |
 
 *The manuscript's prose gives selected percentages to two decimals; its comparison table rounds means to three decimals.*
-
-### Mobile latency
-
-On the Galaxy Tab A9, geometric preprocessing and ROI extraction account for **300.2 ms** of the **354.8 ms** pure compute time (about **84.6%**); model inference accounts for **54.6 ms**. End-to-end latency, including I/O, is **389.7 ± 16.5 ms** across 30 runs.
-
-![Paper-reported on-device latency by stage: 300.2 ms segmentation and normalization, 54.6 ms inference, 354.8 ms pure compute and 389.7 ms end-to-end](assets/mobile-latency-breakdown.png)
-
-*Latency breakdown reproduced from Figure 4 of the conference manuscript; measured on one device.*
 
 ## Project repositories
 
@@ -106,4 +97,4 @@ Each repository contains its own setup instructions and technical documentation.
 
 ## Research boundaries
 
-The paper evaluates one dataset source and profiles latency on one mobile device. Independent external validation and prospective clinical evaluation remain necessary before any diagnostic use. **Positive**, **Negative**, and **Unknown** in the app are research output labels, not confirmed medical findings.
+The paper evaluates one dataset source. Independent external validation and prospective clinical evaluation remain necessary before any diagnostic use. **Positive**, **Negative**, and **Unknown** in the app are research output labels, not confirmed medical findings.
